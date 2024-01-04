@@ -1,0 +1,75 @@
+/* CSS for the pod-like container and labels (unchanged) */
+/* Custom CSS for layout */
+.container {
+    display: flex;
+}
+
+.left-panel {
+    flex: 1;
+    padding: 10px;
+}
+
+.right-panel {
+    flex: 2;
+    padding: 10px;
+}
+
+.form-pod {
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.form-label {
+    font-weight: bold;
+    display: inline-block;
+    width: 120px;
+}
+
+/* CSS for the input fields and dropdowns */
+.form-input, .select-dropdown {
+    width: 200px; /* Set the width of the input fields and dropdowns */
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* CSS to style the date input */
+.form-input[type="date"] {
+    width: 200px; /* Set the same width as other inputs and dropdowns */
+}
+
+/* Add some vertical spacing between the elements */
+.form-pod > form > div {
+    margin-bottom: 10px;
+}
+/* Custom CSS for layout */
+.container {
+    display: flex;
+}
+
+.left-panel {
+    flex: 1;
+    padding: 10px;
+}
+
+.right-panel {
+    flex: 2;
+    padding: 10px;
+}
+.form-group.date-input {
+    margin-bottom: 20px; /* Adjust this value as needed */
+}
+.breadcrumb .breadcrumb-item:first-child {
+    background-color: transparent !important;
+}
+.breadcrumb-item a {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-item i {
+    margin-right: 5px; /* Adjust this value as needed */
+}

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Sync Daily Data</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Github Analyzer Tool</title>
+  <!-- Custom fonts for this template-->
+  <link href="vendor/font-awesome/css/all.min.css" rel="stylesheet" type="text/css">
+  <link
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+  <!-- Add any CSS or other head elements as needed -->
+  <script>
+    function goToIndex() {
+      window.location.href = "/index";
+    }
+  </script>
+
+</head>
+<body>
+<div id="wrapper">
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="javascript:void(0);" onclick="goToIndex()">
+      <div class=" mx-3"> PingCAP </div>
+    </a>
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item active">
+      <a class="nav-link" href="javascript:void(0);" onclick="goToIndex()">>
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span> Dashboard </span>
+      </a>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+      Services
+    </div>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+      <a class="nav-link" href="sprint.html">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span> Sprint Goal </span></a>
+    </li>
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+      <a class="nav-link" href="daily.html">
+        <i class="fas fa-fw fa-wrench"></i>
+        <span>Daily Sync</span>
+      </a>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+      Addons
+    </div>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+         aria-expanded="true" aria-controls="collapsePages">
+        <i class="fas fa-fw fa-folder"></i>
+        <span>Pages</span>
+      </a>
+      <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <h6 class="collapse-header">Login Screens:</h6>
+          <a class="collapse-item" href="login.html">Login</a>
+          <a class="collapse-item" href="register.html">Register</a>
+          <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+          <div class="collapse-divider"></div>
+          <h6 class="collapse-header">Other Pages:</h6>
+          <a class="collapse-item" href="404.html">404 Page</a>
+          <a class="collapse-item" href="blank.html">Blank Page</a>
+        </div>
+      </div>
+    </li>
+    <!-- Nav Item - Charts -->
+    <li class="nav-item">
+      <a class="nav-link" href="charts.html">
+        <i class="fas fa-fw fa-chart-area"></i>
+        <span>Oncall Issues</span></a>
+    </li>
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+      <a class="nav-link" href="tables.html">
+        <i class="fas fa-fw fa-table"></i>
+        <span>Tables</span></a>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+      <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+  </ul>
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <!-- Sidebar Toggle (Topbar) -->
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="javascript:void(0);" onclick="goToIndex()">
+              <span class="breadcrumb-icon"><i class="fas fa-fw fa-tachometer-alt"></i></span>
+              Dashboard
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <a href=""> Sprint Goal </a>
+          </li>
+        </ol>
+
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+          <i class="fa fa-bars"></i>
+        </button>
+      </nav>
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Content Column -->
+          <div class="col-lg-6 mb-4">
+            <!-- Sprint Goal Card Example -->
+            <div class="card h-100 shadow mb-4">
+              <div class="card-header py-3">
+                <h1 class="h3 mb-0 font-weight-bold text-primary">Sprint Goal</h1>
+              </div>
+              <div class="card-body">
+                <div class="row mb-4">
+                  <div class="col-md-6">
+                    <span class="form-label">Organization</span>
+                    <select class="form-input select-dropdown" id="orgSelect" name="org" required>
+                      <option value="pingcap">pingcap</option>
+                      <option value="tikv">tikv</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <span class="form-label">Repository</span>
+                    <select class="form-input select-dropdown" id="repoSelect" name="repo" required>
+                      <option value="tidb">tidb</option>
+                      <option value="tikv">tikv</option>
+                      <option value="tiflow">tiflow</option>
+                      <option value="tiflash">tiflash</option>
+                      <option value="pd">pd</option>
+                    </select>
+                  </div>
+                </div>
+                <form action="/addSprintPlan" method="post">
+                  <div class="mb-4">
+                    <span class="form-label">Created At</span>
+                    <input class="form-input" id="dateInput" name="date" required type="date"/>
+                  </div>
+                  <!--input type="submit" value="Submit"-->
+                  <div class="form-group"> <!-- Added mb-4 class for margin bottom -->
+                    <button type="submit" class="btn btn-primary btn-block btn-icon-split">
+                                            <span class="icon text-white-100">
+                                                <i class="fas fa-flag"></i>
+                                            </span>
+                      <span class="text">Submit</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-4">
+            <!-- Project Card Example -->
+            <div class="card h-100 shadow mb-4">
+              <div class="card-header py-3">
+                <h1 class="h3 mb-0 font-weight-bold text-primary"> Sprint Update </h1>
+              </div>
+              <div class="card-body">
+                <form action="/sprint/updateSprintGoal?sprint=sprint19" method="post">
+                  <div>
+                    <span class="form-label">Sprint:</span>
+                    <select class="form-input select-dropdown  mb-4" id="updateSprintSelect" name="sprint" required>
+                      <option value="Sprint17">Sprint 17</option>
+                      <option value="Sprint18">Sprint 18</option>
+                      <option value="Sprint19" selected>Sprint 19</option>
+                      <option value="Sprint20">Sprint 20</option>
+                      <!-- Add more options as needed -->
+                    </select>
+                  </div>
+                  <div>
+                    <span class="form-label">Org:</span>
+                    <select class="form-input select-dropdown  mb-4" id="updateOrgSelect" name="org" required>
+                      <option value="pingcap">pingcap</option>
+                      <option value="tikv">tikv</option>
+                      <!-- Add more options as needed -->
+                    </select><br>
+                  </div>
+                  <div>
+                    <span class="form-label">Repo:</span>
+                    <select class="form-input select-dropdown  mb-4" id="updateRepoSelect" name="repo" required>
+                      <option value="tidb">tidb</option>
+                      <option value="tikv">tikv</option>
+                      <option value="tiflow">tiflow</option>
+                      <option value="tiflash">tiflash</option>
+                      <option value="pd">pd</option>
+                    </select><br>
+                  </div>
+                  <input type="submit" value="Update">
+                  <!-- Add other input fields specific to this service -->
+                </form>
+              </div>
+            </div>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+</body>
+</html>

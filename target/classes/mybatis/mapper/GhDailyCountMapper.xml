@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pingcap.gat.mapper.GhDailyCountMapper">
+    <sql id="column">
+        org,repo,time,created,closed,open,type,last_modified_at
+    </sql>
+    <select id="getDailyCountByRepo" resultType="GhDailyCount">
+       select * from ghdailycount where org=#{org} and repo=#{repo} and type='y'
+    </select>
+    <select id="select" resultType="Date">
+        select last_modified_at from ghdailycount where org=#{org} and repo=#{repo} and type=#{type}
+    </select>
+    <select id="getDatesForDailyBugs" resultType="Date">
+        select distinct (time) from ghdailycount
+    </select>
+
+    <insert id="insertDailyCount" parameterType="GhDailyCount">
+        insert into ghdailycount set last_modified_at=UTC_TIMESTAMP(), org=#{org}, repo = #{repo}, time=#{time}, created=#{created},closed=#{closed},open=#{open}, type=#{type}
+    </insert>
+
+    <select id="isDailyCountRecordExisting" resultType="int">
+        select count(*) from ghdailycount where org=#{org} and repo=#{repo} and time=#{time} and type=#{type}
+
+    </select>
+
+    <update id="updateDailyCount" >
+        update ghdailycount set last_modified_at=UTC_TIMESTAMP(), created=#{created},closed=#{closed},open=#{open}
+        where org=#{org} and repo = #{repo} and time=#{time} and type=#{type}
+    </update>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pingcap.gat.mapper.GithubIssueMapper">
+    <sql id="column">
+        id, link, repo, org, created_at, updated_at, component, sig, severity, issue_type, author,issue_state,assignee,closed_at,is_issue,merged_at,pr_size,associated_issues,is_pr_tested, is_pr_bugfix
+    </sql>
+    <select id="getLastModifiedAt" resultType="Date">
+        select distinct (last_modified_at) from ghissues
+    </select>
+    <insert id="insertIssues" parameterType="GithubIssue">
+        insert into ghissues set last_modified_at=UTC_TIMESTAMP(), id = #{id}, link = #{link}, org=#{org}, repo = #{repo}, created_at = #{created_at}, updated_at=#{updated_at},component=#{component}, sig = #{sig}, severity = #{severity}, issue_type=#{issue_type},author=#{author},issue_state=#{issue_state}, assignee=#{assignee}, closed_at=#{closed_at}, is_issue=#{is_issue}, merged_at=#{merged_at}, pr_size=#{size},associated_issues=#{associated_issues}, is_pr_tested=#{isPRTested}, is_pr_bugfix=#{isPRBugfix}
+    </insert>
+    <update id="updateIssue" parameterType="GithubIssue">
+        update ghissues set last_modified_at=UTC_TIMESTAMP(),updated_at=#{updated_at},component=#{component}, sig=#{sig}, severity=#{severity}, issue_type=#{issue_type},issue_state=#{issue_state}, assignee=#{assignee}, closed_at=#{closed_at}, merged_at=#{merged_at}, pr_size=#{pr_size},associated_issues=#{associated_issues}, is_pr_tested=#{isPRTested}, is_pr_bugfix=#{isPRBugfix} where link=#{link}
+    </update>
+    <update id="udpateLastModifiedAll">
+        update ghissues set last_modified_at=UTC_TIMESTAMP()
+    </update>
+    <update id="updatePRTested">
+        update ghissues set is_pr_tested=#{isPRTested} where link=#{link}
+    </update>
+    <update id="updatePRBugfix">
+        update ghissues set is_pr_bugfix=#{isPRBugfix} where link=#{link}
+    </update>
+    <select id="getBugKillerList" resultType="BugKiller">
+    select author, count(*) as count from GithubAnalyzer.ghissues where is_issue='n' and associated_issues is not null and author not like  '%bot%' and closed_at >=#{closed_at} group by author order by count desc;
+    </select>
+    <select id="getTopBugKiller" resultType="BugKiller">
+        select author, count(*) as count from GithubAnalyzer.ghissues where is_issue='n' and is_pr_bugfix ='1' and author not like  '%bot%' and closed_at >=#{closed_at} and merged_at is not null group by author order by count desc;
+    </select>
+    <select id="getTopBugKillerDetails" resultType="BugKiller">
+        select author, count(*) as count from GithubAnalyzer.ghissues where is_issue='n' and is_pr_bugfix ='1' and author not like  '%bot%' and closed_at >=#{closed_at} group by author order by count desc;
+    </select>
+    <select id="getGhIssueByLink" resultType="GithubIssue">
+        select * from ghissues where link=#{link}
+    </select>
+    <select id="getGhIssueById" resultType="GithubIssue">
+        select * from ghissues where id=#{id} and repo=#{repo} and org=#{org}
+    </select>
+    <select id="getGhIssueListByRepo" resultType="GithubIssue">
+        select * from ghissues where is_issue='n' and repo=#{repo} order by id desc
+    </select>
+    <select id="getAllClosedPRFromDB" resultType="GithubIssue">
+        select * from ghissues where is_issue='n' and issue_state='closed' order by id desc;
+    </select>
+    <select id="getPRFromDB" resultType="GithubIssue">
+        select id, link, repo, org, created_at, updated_at, component, sig, severity, issue_type, author,issue_state,assignee,closed_at,is_issue,merged_at,pr_size,associated_issues,is_pr_tested, is_pr_bugfix from ghissues where id=#{id};
+    </select>
+
+
+</mapper>

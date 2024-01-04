@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pingcap.gat.mapper.SprintPlanObjMapper">
+    <sql id="column">
+        org,repo,sprint,id,link,issue_state,closed_at,issue_type,label,component,oncallid
+    </sql>
+
+    <insert id="insertSprintPlanObj" parameterType="SprintPlanObj">
+        insert into sprintplan set last_modified_at=UTC_TIMESTAMP(), sprint=#{sprint},org=#{org},repo=#{repo},id=#{id},link=#{link},issue_state=#{issue_state},closed_at=#{closed_at},issue_type=#{issue_type}, label=#{label},component=#{component},oncallid=#{oncallid},sig=#{sig}
+    </insert>
+    <update id="updateBySprint" parameterType="SprintPlanObj">
+        update sprintplan set last_modified_at=UTC_TIMESTAMP(), sprint=#{sprint},org=#{org},repo=#{repo},id=#{id},link=#{link},issue_state=#{issue_state},closed_at=#{closed_at},issue_type=#{issue_type}, label=#{label},component=#{component},oncallid=#{oncallid},sig=#{sig}
+        where link=#{link} and sprint=#{sprint}
+    </update>
+    <select id="getSprintGoal" parameterType="SprintPlanObj">
+        select count(*) as count, repo from GithubAnalyzer.sprintplan where issue_state="closed"  group by repo
+    </select>
+</mapper>

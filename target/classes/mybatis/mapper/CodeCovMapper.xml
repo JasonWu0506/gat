@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pingcap.gat.mapper.CodeCoverageMapper">
+    <sql id="column">
+        name,org,repo,createAt,coverage,branch,insertAt,loc,hits
+    </sql>
+    <select id="getRepoCoverage" resultType="CodeCoverage">
+        select * from codecoverage where repo=#{repo}
+    </select>
+    <select id="getNameList" resultType="String">
+        select name from codecoverage where repo=#{repo} and org=#{org} and branch=#{branch} and insertAt=#{insertAt} and name != #{repo} and name != 'main.go'
+    </select>
+    <select id="getCoverageItems" resultType="CodeCoverage">
+        select * from codecoverage where repo=#{repo} and org=#{org} and branch=#{branch} and insertAt=#{insertAt} and name != #{repo} and name != 'main.go' and name like #{nameLike}
+    </select>
+
+    <insert id="insertCodeCoverageRecord" parameterType="CodeCoverage">
+        insert into codecoverage set insertAt=#{insertAt}, org=#{org}, repo=#{repo}, createAt=#{createAt}, coverage=#{coverage}, branch=#{branch}, name=#{name}, loc=#{loc}, hits=#{hits}
+    </insert>
+</mapper>

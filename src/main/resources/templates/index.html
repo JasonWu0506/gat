@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sync Daily Data</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Github Analyzer Tool</title>
+    <!-- Custom fonts for this template-->
+    <link th:href="@{/vendor/font-awesome/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch data for Highcharts from the backend using Fetch API
+            fetch('/daily/getDailyCount?orgBug=all&repoBug=all') // Replace with the actual endpoint URL
+                .then(response => response.json())
+                .then(data => {
+                    var allBugStatistics = data.allBugStatistics;;
+                    var dates = data.dates;
+                    console.log('Fetched Data:', data);
+                    var chart = Highcharts.chart('bugChart', {
+                        title: {
+                            text: null
+                        },
+                        xAxis: {
+                            categories: dates
+                        },
+                        yAxis: [
+                            {
+                                title: {
+                                    text: 'Number of Open Status'
+                                }
+                            },
+                            {
+                                title: {
+                                    text: 'Created/Closed Count'
+                                },
+                                opposite: true,
+                                min: 0,   // Set the minimum value for the second y-axis
+                                max: 60  // Set the maximum value for the second y-axis
+
+                            }
+                        ],
+                        series: []
+                    });
+
+                    for (var repo in allBugStatistics) {
+                        if (allBugStatistics.hasOwnProperty(repo)) {
+                            var repoData = allBugStatistics[repo];
+                            for (var bugType in repoData) {
+                                if (repoData.hasOwnProperty(bugType)) {
+                                    var bugCountData = repoData[bugType];
+                                    var axisIndex = bugType === 'Open' ? 0 : 1; // Use axis 0 for openBugs, axis 1 for others
+                                    chart.addSeries({
+                                        name: repo + ' - ' + bugType,
+                                        data: bugCountData,
+                                        yAxis: axisIndex
+                                    });
+                                }
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data from backend:', error);
+                });
+            fetch('/dashboard/getTopBugKiller?since=2023-04-01') // Replace with the actual endpoint URL
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        var dataArray = [];
+                        for (var key in data) {
+                            if (data.hasOwnProperty(key)) {
+                                dataArray.push({ key: key, value: data[key] });
+                            }
+                        }
+
+                        // Sort the dataArray by value in descending order
+                        dataArray.sort((a, b) => b.value - a.value);
+                        var bugKillerChart = Highcharts.chart('bugKillerChart', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: 'DI Score'
+                            },
+                            xAxis: {
+                                categories: dataArray.map(item => item.key) // Use sorted keys
+                            },
+                            yAxis: {
+                                title: {
+                                    text: 'Bug Count'
+                                }
+                            },
+                            series: [{
+                                name: 'Bug Count',
+                                data: dataArray.map(item => item.value) // Use sorted values
+                            }]
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data from backend:', error);
+                    });
+        });
+
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <div class=" mx-3">PingCAP </div>
+        </a>
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item active">
+            <a class="nav-link" th:href=".">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span> Dashboard </span></a>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Services
+        </div>
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link" href="sprint.html">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span> Sprint Goal </span></a>
+        </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link" href="daily.html">
+                <i class="fas fa-fw fa-wrench"></i>
+                <span>Daily Sync</span>
+            </a>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Addons
+        </div>
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+               aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Pages</span>
+            </a>
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Login Screens:</h6>
+                    <a class="collapse-item" href="login.html">Login</a>
+                    <a class="collapse-item" href="register.html">Register</a>
+                    <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                    <div class="collapse-divider"></div>
+                    <h6 class="collapse-header">Other Pages:</h6>
+                    <a class="collapse-item" href="404.html">404 Page</a>
+                    <a class="collapse-item" href="blank.html">Blank Page</a>
+                </div>
+            </div>
+        </li>
+        <!-- Nav Item - Charts -->
+        <li class="nav-item">
+            <a class="nav-link" href="charts.html">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>Oncall Issues</span></a>
+        </li>
+        <!-- Nav Item - Tables -->
+        <li class="nav-item">
+            <a class="nav-link" href="tables.html">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Tables</span></a>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
+
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=".">Dashboard</a>
+                    </li>
+
+                </ol>
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                    Test
+                </button>
+
+            </nav>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <!-- Project Card Example -->
+                        <div class="card h-100 shadow mb-4">
+                            <div class="card-header py-3">
+                                <h1 class="h3 mb-0 font-weight-bold text-primary">Daily Bug Trend</h1>
+                            </div>
+                            <div class="card-body">
+
+                                <div id="bugChart" style="width: 100%; height: 300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <!-- Project Card Example -->
+                        <div class="card h-100 shadow mb-4">
+                            <div class="card-header py-3">
+                                <h1 class="h3 mb-0 font-weight-bold text-primary">Top Bug Killers</h1>
+                            </div>
+                            <div class="card-body">
+                                <div id="bugKillerChart" style="width: 100%; height: 300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
